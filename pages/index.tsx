@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { useRouter } from "next/router";  // 加入這行
 
 export default function HomePage() {
   const [nickname, setNickname] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const router = useRouter(); // 使用 router
 
   const handleSubmit = () => {
     if (nickname.trim()) {
       setSubmitted(true);
     }
+  };
+
+  const handleCreate = () => {
+    router.push("/create");
   };
 
   if (!submitted) {
@@ -29,7 +35,7 @@ export default function HomePage() {
     <div style={{ padding: 20 }}>
       <h1>你好，{nickname}</h1>
       <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-        <button>+ 建立活動</button>
+        <button onClick={handleCreate}>+ 建立活動</button>
         <button>+ 加入活動</button>
       </div>
     </div>
