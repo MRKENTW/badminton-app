@@ -17,23 +17,32 @@ export default function HomePage() {
 
   const handleSubmit = async () => {
     if (!nickname.trim() || !experience) return;
-  
+
     const userId = uuidv4();
     const winRate = winRateMap[experience];
     const createdAt = new Date().toISOString(); // 加入建立時間
-  
-    await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        type: "createUser", // 指定為 createUser 類型
-        nickname,
-        userId,
-        winRate,
-        activityId: "", // 沒有活動 ID 時填空
-        createdAt, // 傳送建立時間
-      }),
-    });
-    setSubmitted(true);
+
+    try {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "createUser", // 指定為 createUser 類型
+          nickname,
+          userId,
+          winRate,
+          activityId: "", // 沒有活動 ID 時填空
+          createdAt, // 傳送建立時間
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        console.error("Failed to submit data.");
+      }
+    } catch (error) {
+      console.error("Error during submit:", error);
+    }
   };
 
   if (!submitted) {
