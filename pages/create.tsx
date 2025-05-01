@@ -7,8 +7,8 @@ export default function CreateActivity() {
   const [isPublic, setIsPublic] = useState(true);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [modeA, setModeA] = useState<null | "random" | "balance" >(null);
-  const [modeB, setModeB] = useState<null | "less" | "makeup" >(null);
+  const [modeA, setModeA] = useState<null | "random" | "balance">(null);
+  const [modeB, setModeB] = useState<null | "less" | "makeup">(null);
   const [courtCount, setCourtCount] = useState(2);
   const [courtNames, setCourtNames] = useState<string[]>(["", ""]);
 
@@ -21,7 +21,7 @@ export default function CreateActivity() {
     });
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!activityName || !startTime || !endTime || !modeA || !modeB) {
       alert("請完整填寫所有欄位");
       return;
@@ -37,12 +37,35 @@ export default function CreateActivity() {
       endDate.setDate(endDate.getDate() + 1);
     }
 
-    alert(`活動：${activityName}
-公開：${isPublic}
-時間：${startDate.toLocaleString()} ～ ${endDate.toLocaleString()}
-球場數：${courtCount}
-分配方式：${modeA}
-上場方式：${modeB}`);
+    // 收集活動資料
+    const activityData = {
+      type: "createActivity", // 必須指明為 createActivity
+      activityName,
+      isPublic,
+      startTime: startDate.toISOString(),
+      endTime: endDate.toISOString(),
+      modeA,
+      modeB,
+      courtCount,
+      courtNames,
+      creatorId: "creator123", // 假設創建者 ID，實際可來自當前用戶
+      creatorNickname: "CreatorNickname", // 創建者暱稱，實際應來自當前用戶
+    };
+
+    // 發送資料到 Google Apps Script Web App
+    const response = await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
+      method: "POST",
+      body: JSON.stringify(activityData),
+    });
+
+    const result = await response.json();
+    if (result.status === "Success") {
+      alert("活動創建成功！活動代碼：" + result.activityId);
+      // 若需要，可重定向到活動頁面
+      // router.push(`/activity/${result.activityId}`);
+    } else {
+      alert("活動創建失敗！");
+    }
   };
 
   return (
