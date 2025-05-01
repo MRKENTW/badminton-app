@@ -1,31 +1,39 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { v4 as uuidv4 } from "uuid";
 
 export default function HomePage() {
   const [nickname, setNickname] = useState("");
+  const [experience, setExperience] = useState(""); // 新增球齡
   const [submitted, setSubmitted] = useState(false);
-  const [experience, setExperience] = useState(""); // 球齡
   const router = useRouter();
 
-  const handleSubmit = () => {
-    if (nickname.trim() && experience) {
-      const experienceMap: Record<string, number> = {
-        "1年以下": 35,
-        "1~3年": 50,
-        "3年以上": 65,
-      };
-      const winRate = experienceMap[experience]; // 可用於後端儲存
-
-      console.log("暱稱:", nickname);
-      console.log("球齡:", experience);
-      console.log("預設勝率:", winRate);
-
-      setSubmitted(true);
-    }
+  const experienceOptions = ["1年以下", "1~3年", "3年以上"];
+  const winRateMap: Record<string, number> = {
+    "1年以下": 35,
+    "1~3年": 50,
+    "3年以上": 65,
   };
 
-  const handleCreate = () => {
-    router.push("/create");
+  const handleSubmit = async () => {
+    if (!nickname.trim() || !experience) return;
+  
+    const userId = uuidv4();
+    const winRate = winRateMap[experience];
+    const createdAt = new Date().toISOString(); // 加入建立時間
+  
+    await fetch("https://script.google.com/macros/s/你的SCRIPT_ID/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        nickname,
+        userId,
+        winRate,
+        activityId: "",
+        createdAt, // <-- 傳送新增欄位
+      }),
+    });
+  
+    setSubmitted(true);
   };
 
   if (!submitted) {
@@ -39,22 +47,23 @@ export default function HomePage() {
           style={{ padding: 10, width: "80%", margin: 10 }}
         />
         <div style={{ marginTop: 10 }}>
-          <label style={{ marginRight: 10 }}>選擇球齡：</label>
-          {["1年以下", "1~3年", "3年以上"].map((level) => (
-            <button
-              key={level}
-              onClick={() => setExperience(level)}
-              style={{
-                margin: 5,
-                padding: "5px 10px",
-                backgroundColor: experience === level ? "#b3e5fc" : "#f0f0f0",
-                border: "none",
-                borderRadius: 5,
-              }}
-            >
-              {level}
-            </button>
-          ))}
+          <label>球齡：</label>
+          <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
+            {experienceOptions.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => setExperience(opt)}
+                style={{
+                  background: experience === opt ? "#a0e7f8" : "white",
+                  padding: "6px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: 4,
+                }}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
         </div>
         <button style={{ marginTop: 20 }} onClick={handleSubmit}>
           進入活動系統
@@ -67,7 +76,7 @@ export default function HomePage() {
     <div style={{ padding: 20 }}>
       <h1>你好，{nickname}</h1>
       <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-        <button onClick={handleCreate}>+ 建立活動</button>
+        <button onClick={() => router.push("/create")}>+ 建立活動</button>
         <button>+ 加入活動</button>
       </div>
     </div>
