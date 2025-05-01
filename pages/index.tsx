@@ -15,10 +15,10 @@ export default function HomePage() {
       <div style={{ padding: 20, textAlign: "center" }}>
         <h1>輸入暱稱開始</h1>
         <input
-          placeholder=\"輸入你的暱稱\"
+          placeholder="輸入你的暱稱"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
-          style={{ padding: 10, width: \"80%\", margin: 10 }}
+          style={{ padding: 10, width: "80%", margin: 10 }}
         />
         <button onClick={handleSubmit}>進入活動系統</button>
       </div>
