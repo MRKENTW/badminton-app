@@ -29,11 +29,11 @@ export default function HomePage() {
         nickname,
         userId,
         winRate,
-        activityId: "", // 沒有活動 ID 時填空
-        createdAt, // 傳送建立時間
+        activityId: "",
+        createdAt, // <-- 傳送新增欄位
       }),
     });
-    
+
     setSubmitted(true);
   };
 
@@ -72,3 +72,14 @@ export default function HomePage() {
       </div>
     );
   }
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h1>你好，{nickname}</h1>
+      <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+        <button onClick={() => router.push("/create")}>+ 建立活動</button>
+        <button>+ 加入活動</button>
+      </div>
+    </div>
+  );
+}
