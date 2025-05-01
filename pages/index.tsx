@@ -25,14 +25,15 @@ export default function HomePage() {
     await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
       method: "POST",
       body: JSON.stringify({
+        type: "createUser", // 指定為 createUser 類型
         nickname,
         userId,
         winRate,
-        activityId: "",
-        createdAt, // <-- 傳送新增欄位
+        activityId: "", // 沒有活動 ID 時填空
+        createdAt, // 傳送建立時間
       }),
     });
-
+    
     setSubmitted(true);
   };
 
@@ -47,3 +48,12 @@ export default function HomePage() {
           style={{ padding: 10, width: "80%", margin: 10 }}
         />
         <div style={{ marginTop: 10 }}>
+          <label>球齡：</label>
+          <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
+            {experienceOptions.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => setExperience(opt)}
+                style={{
+                  background: experience === opt ? "#a0e7f8" : "white",
+                  padding: "6px 12px",
