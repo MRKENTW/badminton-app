@@ -22,30 +22,18 @@ export default function HomePage() {
     const winRate = winRateMap[experience];
     const createdAt = new Date().toISOString(); // 加入建立時間
 
-    try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "createUser",
-          nickname,
-          userId,
-          winRate,
-          activityId: "",
-          createdAt,
-        }),
-      });
+    await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        nickname,
+        userId,
+        winRate,
+        activityId: "",
+        createdAt, // <-- 傳送新增欄位
+      }),
+    });
 
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        console.error("Failed to submit data.");
-      }
-    } catch (error) {
-      console.error("Error during submit:", error);
-    }
+    setSubmitted(true);
   };
 
   if (!submitted) {
@@ -59,38 +47,3 @@ export default function HomePage() {
           style={{ padding: 10, width: "80%", margin: 10 }}
         />
         <div style={{ marginTop: 10 }}>
-          <label>球齡：</label>
-          <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
-            {experienceOptions.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => setExperience(opt)}
-                style={{
-                  background: experience === opt ? "#a0e7f8" : "white",
-                  padding: "6px 12px",
-                  border: "1px solid #ccc",
-                  borderRadius: 4,
-                }}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-        </div>
-        <button style={{ marginTop: 20 }} onClick={handleSubmit}>
-          進入活動系統
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>你好，{nickname}</h1>
-      <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-        <button onClick={() => router.push("/create")}>+ 建立活動</button>
-        <button>+ 加入活動</button>
-      </div>
-    </div>
-  );
-}
