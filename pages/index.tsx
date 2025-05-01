@@ -33,8 +33,6 @@ export default function HomePage() {
         createdAt, // 傳送建立時間
       }),
     });
-  };
-  
     setSubmitted(true);
   };
 
