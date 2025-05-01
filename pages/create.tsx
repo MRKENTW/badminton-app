@@ -56,7 +56,7 @@ export default function CreateActivity() {
         style={{ padding: 12, fontSize: 18, width: "100%", margin: "10px 0" }}
       />
 
-      <div style={{ marginTop: 10 }}>活動時間 (24 小時制)</div>
+      <div style={{ marginTop: 10 }}>活動時間</div>
       <div style={{ display: "flex", gap: 10 }}>
         <input
           type="time"
