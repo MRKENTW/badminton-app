@@ -1,150 +1,163 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 
-export default function CreateActivityPage() {
+export default function CreateActivity() {
+  const router = useRouter();
   const [activityName, setActivityName] = useState("");
   const [isPublic, setIsPublic] = useState(true);
-  const [mode, setMode] = useState("A1"); // 預設為 A1
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [modeA, setModeA] = useState<null | "random" | "balance">(null);
+  const [modeB, setModeB] = useState<null | "less" | "makeup">(null);
+  const [courtCount, setCourtCount] = useState(2);
 
   const handleCreate = () => {
-    // 建立活動邏輯（之後可加上後端儲存）
-    alert(`活動：${activityName}\n公開：${isPublic}\n模式：${mode}\n時間：${startTime} - ${endTime}`);
+    if (!activityName || !startTime || !endTime || !modeA || !modeB) {
+      alert("請完整填寫所有欄位");
+      return;
+    }
+
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0];
+
+    const startDate = new Date(`${todayStr}T${startTime}`);
+    let endDate = new Date(`${todayStr}T${endTime}`);
+
+    if (endDate <= startDate) {
+      endDate.setDate(endDate.getDate() + 1);
+    }
+
+    alert(`活動：${activityName}
+公開：${isPublic}
+時間：${startDate.toLocaleString()} ～ ${endDate.toLocaleString()}
+球場數：${courtCount}
+分配方式：${modeA}
+上場方式：${modeB}`);
+
+    // TODO: 將活動資訊送出至後端儲存，然後導頁
+    // router.push("/activity/xxx");
   };
 
   return (
     <div style={{ padding: 20 }}>
-      <h2 style={{ marginBottom: 10 }}>建立活動</h2>
+      <h2 style={{ fontSize: "20px" }}>建立活動</h2>
 
       <input
-        type="text"
         placeholder="活動名稱"
         value={activityName}
         onChange={(e) => setActivityName(e.target.value)}
-        style={{ padding: 12, fontSize: 18, width: "100%", marginBottom: 20 }}
+        style={{ padding: 12, fontSize: 18, width: "100%", margin: "10px 0" }}
       />
 
-      <div style={{ marginBottom: 20 }}>
-        <strong>是否公開</strong>
-        <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-          <button
-            onClick={() => setIsPublic(true)}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: isPublic ? "#b3e5fc" : "#eee",
-              border: "1px solid #ccc",
-              borderRadius: 4,
-            }}
-          >
-            公開
-          </button>
-          <button
-            onClick={() => setIsPublic(false)}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: !isPublic ? "#b3e5fc" : "#eee",
-              border: "1px solid #ccc",
-              borderRadius: 4,
-            }}
-          >
-            秘密
-          </button>
-        </div>
+      <div style={{ marginTop: 10 }}>活動時間 (24 小時制)</div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          type="time"
+          value={startTime}
+          onChange={(e) => setStartTime(e.target.value)}
+        />
+        <span>～</span>
+        <input
+          type="time"
+          value={endTime}
+          onChange={(e) => setEndTime(e.target.value)}
+        />
       </div>
 
-      <div style={{ marginBottom: 20 }}>
-        <strong>活動時間（只輸入時:分）</strong>
-        <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            style={{ padding: 8, flex: 1 }}
-          />
-          <span>～</span>
-          <input
-            type="time"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-            style={{ padding: 8, flex: 1 }}
-          />
-        </div>
+      <div style={{ marginTop: 20 }}>是否公開</div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <button
+          onClick={() => setIsPublic(true)}
+          style={{
+            padding: 10,
+            backgroundColor: isPublic ? "#a0e7f7" : "#eee",
+            border: "1px solid #ccc",
+            flex: 1,
+          }}
+        >
+          公開活動
+        </button>
+        <button
+          onClick={() => setIsPublic(false)}
+          style={{
+            padding: 10,
+            backgroundColor: !isPublic ? "#a0e7f7" : "#eee",
+            border: "1px solid #ccc",
+            flex: 1,
+          }}
+        >
+          秘密活動
+        </button>
       </div>
 
-      <div style={{ marginBottom: 20 }}>
-        <strong>排場模式</strong>
-        <div style={{ display: "flex", gap: 20, marginTop: 8 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ marginBottom: 4 }}>分組 A</div>
-            <div style={{ display: "flex", gap: 10 }}>
-              <button
-                onClick={() => setMode("A1")}
-                style={{
-                  flex: 1,
-                  padding: 10,
-                  backgroundColor: mode === "A1" ? "#b3e5fc" : "#eee",
-                  border: "1px solid #ccc",
-                  borderRadius: 4,
-                }}
-              >
-                隨機分配
-              </button>
-              <button
-                onClick={() => setMode("A2")}
-                style={{
-                  flex: 1,
-                  padding: 10,
-                  backgroundColor: mode === "A2" ? "#b3e5fc" : "#eee",
-                  border: "1px solid #ccc",
-                  borderRadius: 4,
-                }}
-              >
-                勝率平衡
-              </button>
-            </div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ marginBottom: 4 }}>分組 B</div>
-            <div style={{ display: "flex", gap: 10 }}>
-              <button
-                onClick={() => setMode("B1")}
-                style={{
-                  flex: 1,
-                  padding: 10,
-                  backgroundColor: mode === "B1" ? "#b3e5fc" : "#eee",
-                  border: "1px solid #ccc",
-                  borderRadius: 4,
-                }}
-              >
-                遲到少打
-              </button>
-              <button
-                onClick={() => setMode("B2")}
-                style={{
-                  flex: 1,
-                  padding: 10,
-                  backgroundColor: mode === "B2" ? "#b3e5fc" : "#eee",
-                  border: "1px solid #ccc",
-                  borderRadius: 4,
-                }}
-              >
-                遲到補打
-              </button>
-            </div>
-          </div>
-        </div>
+      <div style={{ marginTop: 20 }}>分配方式</div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <button
+          onClick={() => setModeA("random")}
+          style={{
+            padding: 10,
+            backgroundColor: modeA === "random" ? "#a0e7f7" : "#eee",
+            flex: 1,
+          }}
+        >
+          隨機分配
+        </button>
+        <button
+          onClick={() => setModeA("balance")}
+          style={{
+            padding: 10,
+            backgroundColor: modeA === "balance" ? "#a0e7f7" : "#eee",
+            flex: 1,
+          }}
+        >
+          勝率平衡
+        </button>
       </div>
+
+      <div style={{ marginTop: 20 }}>上場方式</div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <button
+          onClick={() => setModeB("less")}
+          style={{
+            padding: 10,
+            backgroundColor: modeB === "less" ? "#a0e7f7" : "#eee",
+            flex: 1,
+          }}
+        >
+          遲到少打
+        </button>
+        <button
+          onClick={() => setModeB("makeup")}
+          style={{
+            padding: 10,
+            backgroundColor: modeB === "makeup" ? "#a0e7f7" : "#eee",
+            flex: 1,
+          }}
+        >
+          遲到補打
+        </button>
+      </div>
+
+      <div style={{ marginTop: 20 }}>球場數量</div>
+      <input
+        type="number"
+        min={1}
+        value={courtCount}
+        onChange={(e) => setCourtCount(Number(e.target.value))}
+        style={{ width: "100%", padding: 10 }}
+      />
 
       <button
         onClick={handleCreate}
         style={{
-          padding: 12,
+          marginTop: 30,
           width: "100%",
-          backgroundColor: "#1976d2",
+          padding: 12,
+          fontSize: 18,
+          backgroundColor: "#0070f3",
           color: "white",
-          fontSize: 16,
           border: "none",
-          borderRadius: 6,
+          borderRadius: 4,
         }}
       >
         建立活動
