@@ -25,13 +25,16 @@ export default function HomePage() {
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          type: "createUser", // 指定為 createUser 類型
+          type: "createUser",
           nickname,
           userId,
           winRate,
-          activityId: "", // 沒有活動 ID 時填空
-          createdAt, // 傳送建立時間
+          activityId: "",
+          createdAt,
         }),
       });
 
