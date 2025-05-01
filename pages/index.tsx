@@ -1,13 +1,25 @@
 import { useState } from "react";
-import { useRouter } from "next/router";  // 加入這行
+import { useRouter } from "next/router";
 
 export default function HomePage() {
   const [nickname, setNickname] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const router = useRouter(); // 使用 router
+  const [experience, setExperience] = useState(""); // 球齡
+  const router = useRouter();
 
   const handleSubmit = () => {
-    if (nickname.trim()) {
+    if (nickname.trim() && experience) {
+      const experienceMap: Record<string, number> = {
+        "1年以下": 35,
+        "1~3年": 50,
+        "3年以上": 65,
+      };
+      const winRate = experienceMap[experience]; // 可用於後端儲存
+
+      console.log("暱稱:", nickname);
+      console.log("球齡:", experience);
+      console.log("預設勝率:", winRate);
+
       setSubmitted(true);
     }
   };
@@ -26,7 +38,27 @@ export default function HomePage() {
           onChange={(e) => setNickname(e.target.value)}
           style={{ padding: 10, width: "80%", margin: 10 }}
         />
-        <button onClick={handleSubmit}>進入活動系統</button>
+        <div style={{ marginTop: 10 }}>
+          <label style={{ marginRight: 10 }}>選擇球齡：</label>
+          {["1年以下", "1~3年", "3年以上"].map((level) => (
+            <button
+              key={level}
+              onClick={() => setExperience(level)}
+              style={{
+                margin: 5,
+                padding: "5px 10px",
+                backgroundColor: experience === level ? "#b3e5fc" : "#f0f0f0",
+                border: "none",
+                borderRadius: 5,
+              }}
+            >
+              {level}
+            </button>
+          ))}
+        </div>
+        <button style={{ marginTop: 20 }} onClick={handleSubmit}>
+          進入活動系統
+        </button>
       </div>
     );
   }
@@ -34,7 +66,7 @@ export default function HomePage() {
   return (
     <div style={{ padding: 20 }}>
       <h1>你好，{nickname}</h1>
-      <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+      <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
         <button onClick={handleCreate}>+ 建立活動</button>
         <button>+ 加入活動</button>
       </div>
