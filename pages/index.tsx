@@ -22,7 +22,7 @@ export default function HomePage() {
     const winRate = winRateMap[experience];
     const createdAt = new Date().toISOString(); // 加入建立時間
   
-    await fetch("https://script.google.com/macros/s/你的SCRIPT_ID/exec", {
+    await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
       method: "POST",
       body: JSON.stringify({
         nickname,
