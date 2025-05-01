@@ -25,13 +25,15 @@ export default function HomePage() {
     await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
       method: "POST",
       body: JSON.stringify({
+        type: "createUser", // 指定為 createUser 類型
         nickname,
         userId,
         winRate,
-        activityId: "",
-        createdAt, // <-- 傳送新增欄位
+        activityId: "", // 沒有活動 ID 時填空
+        createdAt, // 傳送建立時間
       }),
     });
+  };
   
     setSubmitted(true);
   };
