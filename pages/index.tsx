@@ -41,7 +41,12 @@ export default function HomePage() {
     return (
       <div style={{ padding: 20, textAlign: "center" }}>
         <h1>輸入暱稱開始</h1>
-        <input ... />
+        <input
+          placeholder="輸入你的暱稱"
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+          style={{ padding: 10, width: "80%", margin: 10 }}
+        />
         <div style={{ marginTop: 10 }}>
           <label>球齡：</label>
           <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
