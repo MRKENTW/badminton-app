@@ -86,7 +86,7 @@ export default function HomePage() {
           onClick={() =>
             router.push({
               pathname: "/create",
-              query: { userId, nickname},
+              query: { userId, nickname, winRate },
             })
           }
         >
