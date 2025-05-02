@@ -229,7 +229,7 @@ export default function CreateActivity() {
         {Array.from({ length: courtCount }).map((_, i) => (
           <input
             key={i}
-            placeholder={`球場 ${i + 1} 顯示名（可選填）`}
+            placeholder={`球場 ${i + 1} 顯示名（輸入供球友辨認ex.A,B,C,1,2,3...）`}
             value={courtNames[i] || ""}
             onChange={(e) => {
               const newNames = [...courtNames];
