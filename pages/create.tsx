@@ -90,7 +90,7 @@ export default function CreateActivity() {
       if (result.status === "Success") {
         alert("活動創建成功！活動代碼：" + result.activityId);
         // 跳轉到活動頁面，並只傳遞活動 ID
-        router.push(`/activity/${result.activityId}`);
+        router.push(`/activity/${result.activityId}?userId=${creatorId}&nickname=${encodeURIComponent(creatorNickname)}&winRate=${creatorwinRate}`);
       } else {
         alert("活動創建失敗！");
       }
