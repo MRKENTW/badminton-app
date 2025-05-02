@@ -26,17 +26,17 @@ export default function CreateActivity() {
       alert("請完整填寫所有欄位");
       return;
     }
-
+  
     const now = new Date();
     const todayStr = now.toISOString().split("T")[0];
     const createdAt = new Date().toISOString(); // 加入建立時間
     const startDate = new Date(`${todayStr}T${startTime}`);
     let endDate = new Date(`${todayStr}T${endTime}`);
-
+  
     if (endDate <= startDate) {
       endDate.setDate(endDate.getDate() + 1);
     }
-
+  
     // 收集活動資料
     const activityData = {
       type: "createActivity", // 必須指明為 createActivity
@@ -52,22 +52,31 @@ export default function CreateActivity() {
       creatorId: "creator123", // 假設創建者 ID，實際可來自當前用戶
       creatorNickname: "CreatorNickname", // 創建者暱稱，實際應來自當前用戶
     };
-
-    // 發送資料到 Google Apps Script Web App
-    const response = await fetch("https://script.google.com/macros/s/AKfycbxojawCndRPgD_v8mIWqy91X9UKGQSHb211ZbuF2iSOcIXxG0DxnBG_SPSoyEKOcbpy/exec", {
-      method: "POST",
-      body: JSON.stringify(activityData),
-    });
-
-    const result = await response.json();
-    if (result.status === "Success") {
-      alert("活動創建成功！活動代碼：" + result.activityId);
-      // 若需要，可重定向到活動頁面
-      // router.push(`/activity/${result.activityId}`);
-    } else {
-      alert("活動創建失敗！");
+  
+    try {
+      const response = await fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL/exec", {
+        method: "POST",
+        body: JSON.stringify(activityData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('API請求失敗');
+      }
+  
+      const result = await response.json();
+      if (result.status === "Success") {
+        alert("活動創建成功！活動代碼：" + result.activityId);
+        // 若需要，可重定向到活動頁面
+        // router.push(`/activity/${result.activityId}`);
+      } else {
+        alert("活動創建失敗！");
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('發生錯誤：' + error.message);
     }
   };
+
 
   return (
     <div style={{ padding: 20 }}>
