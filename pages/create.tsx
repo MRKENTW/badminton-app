@@ -53,7 +53,7 @@ export default function CreateActivity() {
     };
 
     // 發送資料到 Google Apps Script Web App
-    const response = await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxojawCndRPgD_v8mIWqy91X9UKGQSHb211ZbuF2iSOcIXxG0DxnBG_SPSoyEKOcbpy/exec", {
       method: "POST",
       body: JSON.stringify(activityData),
     });
