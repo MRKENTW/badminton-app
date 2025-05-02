@@ -64,6 +64,7 @@ export default function CreateActivity() {
       courtNames,
       creatorId,
       creatorNickname,
+      creatorwinRate, 
   
       // ✅ 新增球友與閒置名單
       playerList: [playerInfo],
