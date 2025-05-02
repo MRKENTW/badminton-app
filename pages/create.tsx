@@ -42,7 +42,7 @@ export default function CreateActivity() {
     // 建立者資訊（來自 query）
     const creatorId = userId || "unknown";
     const creatorNickname = nickname || "匿名球友";
-    const creatorwinRate = winRate || "匿名球友";
+    const creatorwinRate = Number(winRate) || "匿名球友";
   
     // 球友結構（含 playedCount）
     const playerInfo = {
