@@ -71,9 +71,13 @@ export default function CreateActivity() {
       } else {
         alert("活動創建失敗！");
       }
-    } catch (error) {
+    } catch (error: unknown) { // 指定 error 的型別
+      if (error instanceof Error) {
+        alert('發生錯誤：' + error.message);
+      } else {
+        alert('發生未知錯誤');
+      }
       console.error('Error:', error);
-      alert('發生錯誤：' + error.message);
     }
   };
 
