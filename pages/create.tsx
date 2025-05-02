@@ -56,6 +56,9 @@ export default function CreateActivity() {
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycbxojawCndRPgD_v8mIWqy91X9UKGQSHb211ZbuF2iSOcIXxG0DxnBG_SPSoyEKOcbpy/exec", {
         method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
         body: JSON.stringify(activityData),
       });
   
