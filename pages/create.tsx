@@ -89,7 +89,11 @@ export default function CreateActivity() {
       const result = await response.json();
       if (result.status === "Success") {
         alert("活動創建成功！活動代碼：" + result.activityId);
-        // router.push(`/activity/${result.activityId}`);
+        // 跳轉到活動頁面，並將活動 ID 和一些資料傳遞過去
+        router.push({
+          pathname: `/activity/${result.activityId}`,
+          query: { activityName, startTime, endTime, modeA, modeB, courtNames },
+        });
       } else {
         alert("活動創建失敗！");
       }
