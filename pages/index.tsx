@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function HomePage() {
   const [nickname, setNickname] = useState("");
-  const [experience, setExperience] = useState(""); // 新增球齡
+  const [experience, setExperience] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [userId, setUserId] = useState(""); // 新增 userId 狀態
   const router = useRouter();
 
   const experienceOptions = ["1年以下", "1~3年", "3年以上"];
@@ -18,19 +19,23 @@ export default function HomePage() {
   const handleSubmit = async () => {
     if (!nickname.trim() || !experience) return;
 
-    const userId = uuidv4();
+    const newUserId = uuidv4(); // 產生新的 userId
     const winRate = winRateMap[experience];
-    const createdAt = new Date().toISOString(); // 加入建立時間
+    const createdAt = new Date().toISOString();
 
+    // 儲存 userId 到 state
+    setUserId(newUserId);
+
+    // 送出到 Google Sheet
     await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
       method: "POST",
       body: JSON.stringify({
-        type: "createUser", // 指定為 createUser 類型
+        type: "createUser",
         nickname,
-        userId,
+        userId: newUserId,
         winRate,
         activityId: "",
-        createdAt, // <-- 傳送新增欄位
+        createdAt,
       }),
     });
 
@@ -77,7 +82,16 @@ export default function HomePage() {
     <div style={{ padding: 20 }}>
       <h1>你好，{nickname}</h1>
       <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-        <button onClick={() => router.push("/create")}>+ 建立活動</button>
+        <button
+          onClick={() =>
+            router.push({
+              pathname: "/create",
+              query: { userId, nickname },
+            })
+          }
+        >
+          + 建立活動
+        </button>
         <button>+ 加入活動</button>
       </div>
     </div>
