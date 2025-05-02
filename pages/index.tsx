@@ -15,12 +15,11 @@ export default function HomePage() {
     "1~3年": 50,
     "3年以上": 65,
   };
-
+  const winRate = winRateMap[experience] || 50;
   const handleSubmit = async () => {
     if (!nickname.trim() || !experience) return;
 
     const newUserId = uuidv4(); // 產生新的 userId
-    const winRate = winRateMap[experience];
     const createdAt = new Date().toISOString();
 
     // 儲存 userId 到 state
