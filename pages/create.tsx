@@ -73,7 +73,7 @@ export default function CreateActivity() {
       // ✅ 新增球場資訊，每場預留 8 位球友欄位
       courts: courtNames.map((name, index) => ({
         players: Array(8).fill(null), // 預設為空位
-        courtName: name || `球場 ${index + 1}`,
+        courtName: name || `球場 ${index + 1}`
       })),
     };
   
