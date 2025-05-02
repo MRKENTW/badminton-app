@@ -95,8 +95,8 @@ export default function ActivityDetail() {
             <h4>{court.courtName}</h4>
             <div>
               已上場球友：
-              {court.players.map((player: any, i: number) => (
-                player ? <span key={i}>{player.nickname} </span> : null
+              {court.players.filter((player: any) => player === null).map((_, i: number) => (
+                <span key={i}>空位 </span>
               ))}
             </div>
           </div>
