@@ -15,8 +15,8 @@ export default function ActivityDetail() {
 
     const fetchActivityData = async () => {
       try {
-        // 假設你從 API 或 Google Sheets 獲取活動資料
-        const response = await fetch(`/api/getActivityData?activityId=${activityId}`);
+        // 假設你從新部署的 Google Apps Script API 獲取活動資料
+        const response = await fetch(`https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?activityId=${activityId}`);
         const data = await response.json();
 
         if (data) {
