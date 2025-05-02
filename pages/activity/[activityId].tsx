@@ -5,20 +5,20 @@ import { useState, useEffect } from "react";
 
 export default function ActivityDetail() {
   const router = useRouter();
-  const { activityId } = router.query;
+  const { activityId, userId, nickname } = router.query;
 
   const [activityData, setActivityData] = useState<any>(null);
 
   useEffect(() => {
     if (!activityId) return;
-  
+
     const fetchActivityData = async () => {
       try {
         const response = await fetch(
           `https://script.google.com/macros/s/AKfycbzTJcn9OvJx2m7H1ysHq3tdYuSscCEUJY1DnbWtPEU_lGMqlKgxZgBzhqsdooRNT6q9/exec?activityId=${activityId}`
         );
         const data = await response.json();
-  
+
         if (data.success) {
           const parsedData = {
             ...data.row,
@@ -41,17 +41,19 @@ export default function ActivityDetail() {
   }, [activityId]);
 
   const handleStartMatch = (group: string) => {
-    alert(`開始排場：${group}`);
+    alert(`${nickname} 開始排場：${group}`);
   };
 
-  const handleRest = (playerId: string) => {
-    alert(`讓 ${playerId} 休息`);
+  const handleRest = (targetUserId: string) => {
+    alert(`${nickname} 讓 ${targetUserId} 休息`);
   };
 
   if (!activityData) return <div>載入中...</div>;
 
   return (
     <div style={{ padding: 20 }}>
+      <p>目前使用者：{nickname}（ID: {userId}）</p>
+
       <h2>{activityData["活動名稱"]}</h2>
       <p>活動代碼：{activityData["活動代碼"]}</p>
       <p>
@@ -64,59 +66,64 @@ export default function ActivityDetail() {
         {activityData.playerList.map((player: any) => (
           <li key={player.userId}>
             {player.userId === activityData["創建者 ID"] ? `★` : ""}
-            {player.nickname} (已排場次數: {player.playedCount})
+            {player.nickname} (已排場次數: {player.matchCount ?? 0})
           </li>
         ))}
       </ul>
 
       <h3>閒置名單</h3>
-      <ul>
+      <ul style={{ paddingLeft: 0 }}>
         {activityData.idleList.map((player: any) => (
-          <li key={player.userId}>
-            {player.nickname}
-            {true && ( // 這裡僅閒置名單顯示按鈕
-              <>
-                {activityData.mode === "random" ? (
-                  <>
-                    <button onClick={() => handleStartMatch("random")}>開始排場</button>
-                    <button onClick={() => handleRest(player.userId)}>休息一下</button>
-                  </>
-                ) : activityData.mode === "balance" ? (
-                  <>
-                    <button onClick={() => handleStartMatch("win")}>開始排場 - 勝組</button>
-                    <button onClick={() => handleStartMatch("lose")}>開始排場 - 敗組</button>
-                    <button onClick={() => handleRest(player.userId)}>休息一下</button>
-                  </>
-                ) : null}
-              </>
-            )}
+          <li
+            key={player.userId}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              listStyle: "none",
+              marginBottom: 8,
+              padding: "4px 8px",
+              border: "1px solid #ccc",
+              borderRadius: 4,
+            }}
+          >
+            <span>{player.nickname}</span>
+            {activityData.mode === "random" ? (
+              <div>
+                <button onClick={() => handleStartMatch("random")}>開始排場</button>{" "}
+                <button onClick={() => handleRest(player.userId)}>休息</button>
+              </div>
+            ) : activityData.mode === "balance" ? (
+              <div>
+                <button onClick={() => handleStartMatch("win")}>勝組</button>{" "}
+                <button onClick={() => handleStartMatch("lose")}>敗組</button>{" "}
+                <button onClick={() => handleRest(player.userId)}>休息</button>
+              </div>
+            ) : null}
           </li>
         ))}
       </ul>
 
       <h3>球場列表</h3>
       {activityData.courts.map((court: any, index: number) => (
-        <div key={index} style={{ marginBottom: 20 }}>
-          <div style={{ backgroundColor: "green", color: "white", padding: 10 }}>
-            <h4>球場 {index + 1}</h4>
-            <div>
+        <div key={index} style={{ marginBottom: 12 }}>
+          <div style={{ backgroundColor: "green", color: "white", padding: "4px 8px" }}>
+            <strong>球場 {index + 1}</strong>
+            <div style={{ marginTop: 4 }}>
               場上球友：
               {court.slice(0, 4).map((p: any, i: number) =>
                 p ? <span key={i}>{p.nickname} </span> : <span key={i}>空位 </span>
               )}
             </div>
           </div>
-          <div style={{ backgroundColor: "white", padding: 10 }}>
-            <div>
-              預計下輪：
-              {court.slice(4, 8).map((p: any, i: number) =>
-                p ? <span key={i}>{p.nickname} </span> : <span key={i}>空位 </span>
-              )}
-            </div>
+          <div style={{ backgroundColor: "white", padding: "4px 8px" }}>
+            預計下輪：
+            {court.slice(4, 8).map((p: any, i: number) =>
+              p ? <span key={i}>{p.nickname} </span> : <span key={i}>空位 </span>
+            )}
           </div>
         </div>
       ))}
     </div>
   );
 }
-
