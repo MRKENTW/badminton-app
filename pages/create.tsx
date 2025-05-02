@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 export default function CreateActivity() {
   const router = useRouter();
-  const { userId, nickname } = router.query;
+  const { userId, nickname, winRate} = router.query;
 
   const [activityName, setActivityName] = useState("");
   const [isPublic, setIsPublic] = useState(true);
@@ -39,21 +39,43 @@ export default function CreateActivity() {
       endDate.setDate(endDate.getDate() + 1);
     }
 
+    // 建立者資訊（來自 query）
+    const creatorId = userId || "unknown";
+    const creatorNickname = nickname || "匿名球友";
+    const creatorwinRate = winRate || "匿名球友";
+  
+    // 球友結構（含 playedCount）
+    const playerInfo = {
+      userId: creatorId,
+      nickname: creatorNickname,
+      winRate: creatorwinRate,
+      playedCount: 0,
+    };
+  
     const activityData = {
       type: "createActivity",
       createdAt,
       activityName,
       isPublic,
       startTime: startDate.toISOString(),
-      endTime: endDate.toISOString(),
       modeA,
       modeB,
       courtCount,
       courtNames,
-      creatorId: userId || "unknown",          // 從 query 取得
-      creatorNickname: nickname || "匿名球友", // 從 query 取得
+      creatorId,
+      creatorNickname,
+  
+      // ✅ 新增球友與閒置名單
+      playerList: [playerInfo],
+      idleList: [playerInfo],
+  
+      // ✅ 新增球場資訊，每場預留 8 位球友欄位
+      courts: courtNames.map((name, index) => ({
+        courtName: name || `球場 ${index + 1}`,
+        players: Array(8).fill(null), // 預設為空位
+      })),
     };
-
+  
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycbxojawCndRPgD_v8mIWqy91X9UKGQSHb211ZbuF2iSOcIXxG0DxnBG_SPSoyEKOcbpy/exec", {
         method: "POST",
@@ -62,7 +84,7 @@ export default function CreateActivity() {
         },
         body: JSON.stringify(activityData),
       });
-
+  
       const result = await response.json();
       if (result.status === "Success") {
         alert("活動創建成功！活動代碼：" + result.activityId);
