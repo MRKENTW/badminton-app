@@ -6,7 +6,9 @@ export default function HomePage() {
   const [nickname, setNickname] = useState("");
   const [experience, setExperience] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [userId, setUserId] = useState(""); // 新增 userId 狀態
+  const [userId, setUserId] = useState("");
+  const [joinMode, setJoinMode] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
   const router = useRouter();
 
   const experienceOptions = ["1年以下", "1~3年", "3年以上"];
@@ -16,16 +18,15 @@ export default function HomePage() {
     "3年以上": 65,
   };
   const winRate = winRateMap[experience] || 50;
+
   const handleSubmit = async () => {
     if (!nickname.trim() || !experience) return;
 
-    const newUserId = uuidv4(); // 產生新的 userId
+    const newUserId = uuidv4();
     const createdAt = new Date().toISOString();
 
-    // 儲存 userId 到 state
     setUserId(newUserId);
 
-    // 送出到 Google Sheet
     await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
       method: "POST",
       body: JSON.stringify({
@@ -39,6 +40,36 @@ export default function HomePage() {
     });
 
     setSubmitted(true);
+  };
+
+  const handleJoinActivity = async () => {
+    if (!joinCode.trim()) return alert("請輸入活動代碼");
+
+    const playerInfo = {
+      userId,
+      nickname,
+      winRate,
+      playedCount: 0,
+    };
+
+    const res = await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        type: "joinActivity",
+        activityId: joinCode,
+        playerInfo,
+      }),
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      router.push({
+        pathname: `/activity/${joinCode}`,
+        query: { userId, nickname, winRate },
+      });
+    } else {
+      alert("加入失敗，請確認活動代碼是否正確！");
+    }
   };
 
   if (!submitted) {
@@ -91,7 +122,19 @@ export default function HomePage() {
         >
           + 建立活動
         </button>
-        <button>+ 加入活動</button>
+        {!joinMode ? (
+          <button onClick={() => setJoinMode(true)}>+ 加入活動</button>
+        ) : (
+          <>
+            <input
+              placeholder="請輸入活動代碼"
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              style={{ padding: 10, flex: 1 }}
+            />
+            <button onClick={handleJoinActivity}>確認加入</button>
+          </>
+        )}
       </div>
     </div>
   );
