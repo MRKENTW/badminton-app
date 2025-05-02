@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 export default function CreateActivity() {
   const router = useRouter();
+  const { userId, nickname } = router.query;
+
   const [activityName, setActivityName] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [startTime, setStartTime] = useState("");
@@ -12,6 +14,7 @@ export default function CreateActivity() {
   const [courtCount, setCourtCount] = useState(2);
   const [courtNames, setCourtNames] = useState<string[]>(["", ""]);
 
+  // 確保 courtNames 長度跟 courtCount 一致
   const handleCourtCountChange = (count: number) => {
     setCourtCount(count);
     setCourtNames((prev) => {
@@ -26,21 +29,19 @@ export default function CreateActivity() {
       alert("請完整填寫所有欄位");
       return;
     }
-  
+
     const now = new Date();
     const todayStr = now.toISOString().split("T")[0];
-    const createdAt = new Date().toISOString(); // 加入建立時間
+    const createdAt = new Date().toISOString();
     const startDate = new Date(`${todayStr}T${startTime}`);
     let endDate = new Date(`${todayStr}T${endTime}`);
-  
     if (endDate <= startDate) {
       endDate.setDate(endDate.getDate() + 1);
     }
-  
-    // 收集活動資料
+
     const activityData = {
-      type: "createActivity", // 必須指明為 createActivity
-      createdAt, // <-- 傳送新增欄位
+      type: "createActivity",
+      createdAt,
       activityName,
       isPublic,
       startTime: startDate.toISOString(),
@@ -49,10 +50,10 @@ export default function CreateActivity() {
       modeB,
       courtCount,
       courtNames,
-      creatorId: "creator123", // 假設創建者 ID，實際可來自當前用戶
-      creatorNickname: "CreatorNickname", // 創建者暱稱，實際應來自當前用戶
+      creatorId: userId || "unknown",          // 從 query 取得
+      creatorNickname: nickname || "匿名球友", // 從 query 取得
     };
-  
+
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycbxojawCndRPgD_v8mIWqy91X9UKGQSHb211ZbuF2iSOcIXxG0DxnBG_SPSoyEKOcbpy/exec", {
         method: "POST",
@@ -61,29 +62,23 @@ export default function CreateActivity() {
         },
         body: JSON.stringify(activityData),
       });
-  
-      if (!response.ok) {
-        throw new Error('API請求失敗');
-      }
-  
+
       const result = await response.json();
       if (result.status === "Success") {
         alert("活動創建成功！活動代碼：" + result.activityId);
-        // 若需要，可重定向到活動頁面
         // router.push(`/activity/${result.activityId}`);
       } else {
         alert("活動創建失敗！");
       }
-    } catch (error: unknown) { // 指定 error 的型別
+    } catch (error: unknown) {
       if (error instanceof Error) {
-        alert('發生錯誤：' + error.message);
+        alert("發生錯誤：" + error.message);
       } else {
-        alert('發生未知錯誤');
+        alert("發生未知錯誤");
       }
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
-
 
   return (
     <div style={{ padding: 20 }}>
