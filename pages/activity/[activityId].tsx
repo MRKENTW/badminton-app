@@ -21,9 +21,9 @@ export default function ActivityDetail() {
         if (data.success) {
           const parsedData = {
             ...data.row,
-            playerList: JSON.parse(data.row["球友名單（JSON 格式）"]),
-            idleList: JSON.parse(data.row["閒置名單（JSON 格式）"]),
-            courts: JSON.parse(data.row["場上球友列表"]),
+            playerList: data.row["球友名單（JSON 格式）"],
+            idleList: data.row["閒置名單（JSON 格式）"],
+            courts: data.row["場上球友列表"],
             mode: data.row["分配方式"],
           };
           setActivityData(parsedData);
