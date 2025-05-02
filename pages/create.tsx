@@ -40,9 +40,9 @@ export default function CreateActivity() {
     }
 
     // 建立者資訊（來自 query）
-    const creatorId = userId || "unknown";
-    const creatorNickname = nickname || "匿名球友";
-    const creatorwinRate = Number(winRate) || "匿名球友";
+    const creatorId = typeof userId === "string" ? userId : userId?.[0] || "unknown";
+    const creatorNickname = typeof nickname === "string" ? nickname : nickname?.[0] || "匿名球友";
+    const creatorwinRate = typeof winRate === "string" ? parseFloat(winRate) : parseFloat(winRate?.[0] || "0");
   
     // 球友結構（含 playedCount）
     const playerInfo = {
