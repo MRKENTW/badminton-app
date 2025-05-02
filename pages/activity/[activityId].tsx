@@ -11,13 +11,14 @@ export default function ActivityDetail() {
 
   useEffect(() => {
     if (!activityId) return;
-
+  
     const fetchActivityData = async () => {
       try {
         const response = await fetch(
           `https://script.google.com/macros/s/AKfycbzTJcn9OvJx2m7H1ysHq3tdYuSscCEUJY1DnbWtPEU_lGMqlKgxZgBzhqsdooRNT6q9/exec?activityId=${activityId}`
         );
         const data = await response.json();
+  
         if (data.success) {
           const parsedData = {
             ...data.row,
