@@ -29,7 +29,7 @@ export default function CreateActivity() {
 
     const now = new Date();
     const todayStr = now.toISOString().split("T")[0];
-
+    const createdAt = new Date().toISOString(); // 加入建立時間
     const startDate = new Date(`${todayStr}T${startTime}`);
     let endDate = new Date(`${todayStr}T${endTime}`);
 
@@ -40,6 +40,7 @@ export default function CreateActivity() {
     // 收集活動資料
     const activityData = {
       type: "createActivity", // 必須指明為 createActivity
+      createdAt, // <-- 傳送新增欄位
       activityName,
       isPublic,
       startTime: startDate.toISOString(),
