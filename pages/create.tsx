@@ -6,7 +6,7 @@ export default function CreateActivity() {
   const { userId, nickname, winRate} = router.query;
 
   const [activityName, setActivityName] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+  const [isPublic, setIsPublic] = useState("否");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [modeA, setModeA] = useState<null | "random" | "balance">(null);
@@ -130,34 +130,6 @@ export default function CreateActivity() {
           onChange={(e) => setEndTime(e.target.value)}
           style={{ flex: 1 }}
         />
-      </div>
-
-      <div style={{ marginTop: 20 }}>是否公開</div>
-      <div style={{ display: "flex", gap: 10 }}>
-        <button
-          onClick={() => setIsPublic(true)}
-          style={{
-            padding: 10,
-            backgroundColor: isPublic ? "#a0e7f7" : "#eee",
-            flex: 1,
-            border: "none",
-            borderRadius: 4,
-          }}
-        >
-          公開活動
-        </button>
-        <button
-          onClick={() => setIsPublic(false)}
-          style={{
-            padding: 10,
-            backgroundColor: !isPublic ? "#a0e7f7" : "#eee",
-            flex: 1,
-            border: "none",
-            borderRadius: 4,
-          }}
-        >
-          秘密活動
-        </button>
       </div>
 
       <div style={{ marginTop: 20 }}>分配方式</div>
