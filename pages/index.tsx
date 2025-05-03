@@ -52,7 +52,7 @@ export default function HomePage() {
       playedCount: 0,
     };
 
-    const res = await fetch("https://script.google.com/macros/s/AKfycbwwLZRWLZlghHbqxOlSdXkER-HPbi1RnhzCzW_U06jipIqzEXWvd8LShFFo1UtunzyH1Q/exec", {
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzTJcn9OvJx2m7H1ysHq3tdYuSscCEUJY1DnbWtPEU_lGMqlKgxZgBzhqsdooRNT6q9/exec", {
       method: "POST",
       body: JSON.stringify({
         type: "joinActivity",
