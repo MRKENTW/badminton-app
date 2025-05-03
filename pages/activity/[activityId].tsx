@@ -64,7 +64,7 @@ export default function ActivityDetail() {
 
   return (
     <div style={{ padding: 20 }}>
-      <p>目前使用者：{nickname}（ID: {userId}）</p>
+      <p>我的暱稱：{nickname}</p>
 
       <h2>{activityData["活動名稱"]}</h2>
       <p>活動代碼：{activityData["活動代碼"]}</p>
