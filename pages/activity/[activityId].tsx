@@ -105,24 +105,29 @@ export default function ActivityDetail() {
       </ul>
 
       <h3>球場列表</h3>
-      {activityData.courts.map((court: any, index: number) => (
-        <div key={index} style={{ marginBottom: 12 }}>
-          <div style={{ backgroundColor: "green", color: "white", padding: "4px 8px" }}>
-            <strong>球場 {index + 1}</strong>
-            <div style={{ marginTop: 4 }}>
-              場上球友：
-              {court.slice(0, 4).map((p: any, i: number) =>
+      {activityData.courts.map((court: any, index: number) => {
+        const courtName = court.courtName || `球場 ${index + 1}`;
+        const onCourt = court.players?.slice(0, 4) || [];
+        const nextRound = court.players?.slice(4, 8) || [];
+      
+        return (
+          <div key={index} style={{ marginBottom: 12 }}>
+            <div style={{ backgroundColor: "green", color: "white", padding: "4px 8px" }}>
+              <strong>{courtName}</strong>
+              <div style={{ marginTop: 4 }}>
+                場上球友：
+                {onCourt.map((p: any, i: number) =>
+                  p ? <span key={i}>{p.nickname} </span> : <span key={i}>空位 </span>
+                )}
+              </div>
+            </div>
+            <div style={{ backgroundColor: "white", padding: "4px 8px" }}>
+              預計下輪：
+              {nextRound.map((p: any, i: number) =>
                 p ? <span key={i}>{p.nickname} </span> : <span key={i}>空位 </span>
               )}
             </div>
           </div>
-          <div style={{ backgroundColor: "white", padding: "4px 8px" }}>
-            預計下輪：
-            {court.slice(4, 8).map((p: any, i: number) =>
-              p ? <span key={i}>{p.nickname} </span> : <span key={i}>空位 </span>
-            )}
-          </div>
-        </div>
       ))}
     </div>
   );
