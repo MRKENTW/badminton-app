@@ -64,9 +64,26 @@ export default function ActivityDetail() {
 
   return (
     <div style={{ padding: 20 }}>
-      <p>我的暱稱：{nickname}</p>
-
+      
       <h2>{activityData["活動名稱"]}</h2>
+      
+      <p style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span>我的暱稱：{nickname}</span>
+        {activityData.playerList.some((p: any) => p.userId === userId) && (
+          <div style={{ display: "flex", gap: 8 }}>
+            {activityData.mode === "random" ? (
+              <button onClick={() => handleStartMatch("random")}>開始排場</button>
+            ) : activityData.mode === "balance" ? (
+              <>
+                <button onClick={() => handleStartMatch("win")}>勝組</button>
+                <button onClick={() => handleStartMatch("lose")}>敗組</button>
+              </>
+            ) : null}
+            <button onClick={() => handleRest(userId as string)}>我要休息</button>
+          </div>
+        )}
+      </p>
+
       <p>活動代碼：{activityData["活動代碼"]}</p>
       <p>
         活動時間：
@@ -89,9 +106,6 @@ export default function ActivityDetail() {
           <li
             key={player.userId}
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
               listStyle: "none",
               marginBottom: 8,
               padding: "4px 8px",
@@ -99,19 +113,7 @@ export default function ActivityDetail() {
               borderRadius: 4,
             }}
           >
-            <span>{player.nickname}</span>
-            {activityData.mode === "random" ? (
-              <div>
-                <button onClick={() => handleStartMatch("random")}>開始排場</button>{" "}
-                <button onClick={() => handleRest(player.userId)}>休息</button>
-              </div>
-            ) : activityData.mode === "balance" ? (
-              <div>
-                <button onClick={() => handleStartMatch("win")}>勝組</button>{" "}
-                <button onClick={() => handleStartMatch("lose")}>敗組</button>{" "}
-                <button onClick={() => handleRest(player.userId)}>休息</button>
-              </div>
-            ) : null}
+            {player.nickname}
           </li>
         ))}
       </ul>
