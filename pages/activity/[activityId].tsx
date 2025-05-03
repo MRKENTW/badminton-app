@@ -109,7 +109,7 @@ export default function ActivityDetail() {
         const courtName = court.courtName || `球場 ${index + 1}`;
         const onCourt = court.players?.slice(0, 4) || [];
         const nextRound = court.players?.slice(4, 8) || [];
-      
+
         return (
           <div key={index} style={{ marginBottom: 12 }}>
             <div style={{ backgroundColor: "green", color: "white", padding: "4px 8px" }}>
@@ -130,3 +130,6 @@ export default function ActivityDetail() {
           </div>
         );
       })}
+    </div>
+  );
+}
