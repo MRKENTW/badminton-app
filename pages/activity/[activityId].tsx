@@ -128,7 +128,7 @@ export default function ActivityDetail() {
               )}
             </div>
           </div>
-      ))}
+      );)}
     </div>
   );
 }
