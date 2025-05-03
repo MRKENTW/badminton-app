@@ -18,18 +18,27 @@ export default function ActivityDetail() {
           `https://script.google.com/macros/s/AKfycbzTJcn9OvJx2m7H1ysHq3tdYuSscCEUJY1DnbWtPEU_lGMqlKgxZgBzhqsdooRNT6q9/exec?activityId=${activityId}`
         );
         const data = await response.json();
-
+        
         if (data.success) {
+          // 取出所有欄位
           const entries = Object.entries(data.row);
+          // 取得第13欄（index從0開始）之後的欄位值作為 courtNames
           const courtNames = entries.slice(12).map(([_, value]) => value);
+        
+          // 將每個場地加上對應名稱（若名稱有）
+          const namedCourts = (data.row["場上球友列表"] || []).map((court: any, index: number) => ({
+            courtName: courtNames[index] || `球場 ${index + 1}`,
+            players: court,
+          }));
+        
           const parsedData = {
             ...data.row,
             playerList: data.row["球友名單（JSON 格式）"],
             idleList: data.row["閒置名單（JSON 格式）"],
-            courts: data.row["場上球友列表"],
+            courts: namedCourts,
             mode: data.row["分配方式"],
-            courtNames,
           };
+        
           setActivityData(parsedData);
         } else {
           alert("找不到該活動！");
