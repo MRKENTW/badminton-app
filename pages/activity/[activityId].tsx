@@ -100,7 +100,7 @@ export default function ActivityDetail() {
         ))}
       </ul>
 
-      <h3>休息名單</h3>
+      <h3>等候名單</h3>
       <ul style={{ paddingLeft: 0 }}>
         {activityData.idleList.map((player: any) => (
           <li
