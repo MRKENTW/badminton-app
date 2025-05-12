@@ -99,7 +99,7 @@ export default function HomePage() {
         />
 
         <div style={{ marginTop: 20 }}>
-          <label>選擇球技等級：</label>
+          <label>選擇大致分級：</label>
           <input
             type="range"
             min={20}
