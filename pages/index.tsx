@@ -4,23 +4,38 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function HomePage() {
   const [nickname, setNickname] = useState("");
-  const [experience, setExperience] = useState("");
+  const [experienceValue, setExperienceValue] = useState(20); // default 新手
   const [submitted, setSubmitted] = useState(false);
   const [userId, setUserId] = useState("");
   const [joinMode, setJoinMode] = useState(false);
   const [joinCode, setJoinCode] = useState("");
   const router = useRouter();
 
-  const experienceOptions = ["1年以下", "1~3年", "3年以上"];
-  const winRateMap: Record<string, number> = {
-    "1年以下": 35,
-    "1~3年": 50,
-    "3年以上": 65,
+  const levelMarks = [
+    { label: "新手", value: 20 },
+    { label: "初階", value: 30 },
+    { label: "初中", value: 40 },
+    { label: "中階", value: 50 },
+    { label: "中高", value: 60 },
+    { label: "高階", value: 70 },
+    { label: "職業", value: 80 },
+  ];
+
+  const winRateMap: Record<number, number> = {
+    20: 30,
+    30: 40,
+    40: 50,
+    50: 60,
+    60: 65,
+    70: 75,
+    80: 85,
   };
-  const winRate = winRateMap[experience] || 50;
+
+  const winRate = winRateMap[experienceValue] || 50;
+  const experienceLabel = levelMarks.find((m) => m.value === experienceValue)?.label || "中階";
 
   const handleSubmit = async () => {
-    if (!nickname.trim() || !experience) return;
+    if (!nickname.trim()) return;
 
     const newUserId = uuidv4();
     const createdAt = new Date().toISOString();
@@ -82,25 +97,26 @@ export default function HomePage() {
           onChange={(e) => setNickname(e.target.value)}
           style={{ padding: 10, width: "80%", margin: 10 }}
         />
-        <div style={{ marginTop: 10 }}>
-          <label>球齡：</label>
-          <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
-            {experienceOptions.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => setExperience(opt)}
-                style={{
-                  background: experience === opt ? "#a0e7f8" : "white",
-                  padding: "6px 12px",
-                  border: "1px solid #ccc",
-                  borderRadius: 4,
-                }}
-              >
-                {opt}
-              </button>
+
+        <div style={{ marginTop: 20 }}>
+          <label>選擇球技等級：</label>
+          <input
+            type="range"
+            min={20}
+            max={80}
+            step={10}
+            value={experienceValue}
+            onChange={(e) => setExperienceValue(parseInt(e.target.value))}
+            style={{ width: "100%", marginTop: 10 }}
+          />
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.9rem", marginTop: 5 }}>
+            {levelMarks.map((mark) => (
+              <span key={mark.value}>{mark.label}</span>
             ))}
           </div>
+          <p style={{ marginTop: 10 }}>目前等級：<strong>{experienceLabel}</strong>，預估勝率：<strong>{winRate}%</strong></p>
         </div>
+
         <button style={{ marginTop: 20 }} onClick={handleSubmit}>
           進入活動系統
         </button>
