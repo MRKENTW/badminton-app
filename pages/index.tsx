@@ -114,7 +114,6 @@ export default function HomePage() {
               <span key={mark.value}>{mark.label}</span>
             ))}
           </div>
-          <p style={{ marginTop: 10 }}>目前等級：<strong>{experienceLabel}</strong>，預估勝率：<strong>{winRate}%</strong></p>
         </div>
 
         <button style={{ marginTop: 20 }} onClick={handleSubmit}>
